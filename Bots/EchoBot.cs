@@ -23,12 +23,15 @@ namespace ChatWithMe.Bots
 
         protected override async Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
         {
-            string welcomeText = "Hello there, welcome to ChatWithMe. How can I help you?";
-            foreach (var member in membersAdded)
+            if (turnContext.Activity.ChannelId != "webchat" && turnContext.Activity.ChannelId != "directline")
             {
-                if (member.Id != turnContext.Activity.Recipient.Id)
+                string welcomeText = "Hello there, welcome to ChatWithMe. How can I help you?";
+                foreach (var member in membersAdded)
                 {
-                    await turnContext.SendActivityAsync(MessageFactory.Text(welcomeText, welcomeText), cancellationToken);
+                    if (member.Id != turnContext.Activity.Recipient.Id)
+                    {
+                        await turnContext.SendActivityAsync(MessageFactory.Text(welcomeText, welcomeText), cancellationToken);
+                    }
                 }
             }
         }
