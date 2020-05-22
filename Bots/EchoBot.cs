@@ -16,9 +16,10 @@ namespace ChatWithMe.Bots
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
             var text = turnContext.Activity.Text;
-            if (text.Length == 0 || text == null)
+            var type = turnContext.Activity.Type;
+            if (type == "welcomeEvent")
             {
-                string welcomeText = "Hello there, welcome to ChatWithMe. How can I help you?";
+                string welcomeText = "Hello there, welcome to ChatWithMe. How can I help you? 1" + text;
                 await turnContext.SendActivityAsync(MessageFactory.Text(welcomeText, welcomeText), cancellationToken);
             }
             else
