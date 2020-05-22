@@ -18,7 +18,7 @@ namespace ChatWithMe.Bots
         {
             await base.OnConversationUpdateActivityAsync(turnContext, cancellationToken);
 
-            if (turnContext.Activity.ChannelId == "directline")
+            if (turnContext.Activity.ChannelId != "webchat" && turnContext.Activity.ChannelId != "directline")
             {
                 string welcomeText = "Hello there, welcome to ChatWithMe. How can I help you? 1";
                 await turnContext.SendActivityAsync(MessageFactory.Text(welcomeText, welcomeText), cancellationToken);
@@ -27,6 +27,11 @@ namespace ChatWithMe.Bots
 
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
+            if (turnContext.Activity.ChannelId != "webchat" && turnContext.Activity.ChannelId != "directline")
+            {
+                string welcomeText = "Hello there, welcome to ChatWithMe. How can I help you? 2";
+                await turnContext.SendActivityAsync(MessageFactory.Text(welcomeText, welcomeText), cancellationToken);
+            }
             var text = turnContext.Activity.Text;
             var type = turnContext.Activity.Type;
             TextProcess textProcess = new TextProcess();
@@ -36,12 +41,15 @@ namespace ChatWithMe.Bots
 
         protected override async Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
         {
-            string welcomeText = "Hello there, welcome to ChatWithMe. How can I help you? 2";
-            foreach (var member in membersAdded)
+            if (turnContext.Activity.ChannelId != "webchat" && turnContext.Activity.ChannelId != "directline")
             {
-                if (member.Id != turnContext.Activity.Recipient.Id)
+                string welcomeText = "Hello there, welcome to ChatWithMe. How can I help you? 3";
+                foreach (var member in membersAdded)
                 {
-                    await turnContext.SendActivityAsync(MessageFactory.Text(welcomeText, welcomeText), cancellationToken);
+                    if (member.Id != turnContext.Activity.Recipient.Id)
+                    {
+                        await turnContext.SendActivityAsync(MessageFactory.Text(welcomeText, welcomeText), cancellationToken);
+                    }
                 }
             }
         }

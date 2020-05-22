@@ -27,7 +27,7 @@ namespace ChatWithMe.Bots
         }
 
         private static readonly string endpoint = "westus.api.cognitive.microsoft.com";
-        private static readonly object appId = "1e28b3f3-3114-4697-9db6-7831ccc0cdfb";
+        private static readonly object appId = "4014a766-1441-43e8-904d-0eef2b8e8578";
         private static readonly object key = "7cba6c96a15b4addabf2cfb0f3d95ff0";
     }
 }
