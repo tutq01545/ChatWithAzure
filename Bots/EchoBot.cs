@@ -12,9 +12,18 @@ using Microsoft.Bot.Schema;
 namespace ChatWithMe.Bots
 {
     public class EchoBot : ActivityHandler
-    {               
+    {
+        private static bool start = true;
+
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
+            if (start)
+            {
+                start = false;
+                string welcomeText = "Hello there, welcome to ChatWithMe. How can I help you?";
+                await turnContext.SendActivityAsync(MessageFactory.Text(welcomeText, welcomeText), cancellationToken);
+            }
+
             var text = turnContext.Activity.Text;            
             TextProcess textProcess = new TextProcess();
             string replyText = textProcess.Run(text);
@@ -28,8 +37,9 @@ namespace ChatWithMe.Bots
                 string welcomeText = "Hello there, welcome to ChatWithMe. How can I help you?";
                 foreach (var member in membersAdded)
                 {
-                    if (member.Id != turnContext.Activity.Recipient.Id)
+                    if (member.Id != turnContext.Activity.Recipient.Id && start)
                     {
+                        start = false;
                         await turnContext.SendActivityAsync(MessageFactory.Text(welcomeText, welcomeText), cancellationToken);
                     }
                 }
