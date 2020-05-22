@@ -14,26 +14,18 @@ namespace ChatWithMe.Bots
 {
     public class EchoBot : ActivityHandler
     {
-        protected override async Task OnConversationUpdateActivityAsync(ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
+        protected override async Task OnEventActivityAsync(ITurnContext<IEventActivity> turnContext, CancellationToken cancellationToken)
         {
-            await base.OnConversationUpdateActivityAsync(turnContext, cancellationToken);
-
-            if (turnContext.Activity.ChannelId != "webchat" && turnContext.Activity.ChannelId != "directline")
+            if (turnContext.Activity.Name == "directline/join")
             {
-                string welcomeText = "Hello there, welcome to ChatWithMe. How can I help you? 1";
-                await turnContext.SendActivityAsync(MessageFactory.Text(welcomeText, welcomeText), cancellationToken);
+                string welcomeText = "Hello there, welcome to ChatWithMe. How can I help you?";
+                await turnContext.SendActivityAsync(welcomeText);
             }
         }
 
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
-            if (turnContext.Activity.ChannelId != "webchat" && turnContext.Activity.ChannelId != "directline")
-            {
-                string welcomeText = "Hello there, welcome to ChatWithMe. How can I help you? 2";
-                await turnContext.SendActivityAsync(MessageFactory.Text(welcomeText, welcomeText), cancellationToken);
-            }
             var text = turnContext.Activity.Text;
-            var type = turnContext.Activity.Type;
             TextProcess textProcess = new TextProcess();
             string replyText = textProcess.Run(text);
             await turnContext.SendActivityAsync(MessageFactory.Text(replyText, replyText), cancellationToken);                       
@@ -43,7 +35,7 @@ namespace ChatWithMe.Bots
         {
             if (turnContext.Activity.ChannelId != "webchat" && turnContext.Activity.ChannelId != "directline")
             {
-                string welcomeText = "Hello there, welcome to ChatWithMe. How can I help you? 3";
+                string welcomeText = "Hello there, welcome to ChatWithMe. How can I help you?";
                 foreach (var member in membersAdded)
                 {
                     if (member.Id != turnContext.Activity.Recipient.Id)
