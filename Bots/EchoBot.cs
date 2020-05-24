@@ -14,28 +14,39 @@ namespace ChatWithMe.Bots
 {
     public class EchoBot : ActivityHandler
     {
+        private readonly string welcomeText = "Hello there, welcome to KPMG ChatBot about Covid-19 in Germany. How can I help you?";
+        private readonly string unclearUserInputResponse = "Your input is unclear for us. Please check it again!";
+        private readonly string indexName = "gms_covid19_globaltracker";
+
         protected override async Task OnEventActivityAsync(ITurnContext<IEventActivity> turnContext, CancellationToken cancellationToken)
         {
             if (turnContext.Activity.Name == "directline/join")
-            {
-                string welcomeText = "Hello there, welcome to ChatWithMe. How can I help you?";
+            {                
                 await turnContext.SendActivityAsync(welcomeText);
             }
         }
 
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
-            var text = turnContext.Activity.Text;
-            TextProcess textProcess = new TextProcess();
-            string replyText = textProcess.Run(text);
-            await turnContext.SendActivityAsync(MessageFactory.Text(replyText, replyText), cancellationToken);                       
+            var userInput = turnContext.Activity.Text;
+            TextProcessViaNLP textProcess = new TextProcessViaNLP();
+            string processedText = textProcess.Run(userInput);
+            string returnText = "";
+            if (processedText != "")
+            {                
+                SearchEngine searchEngine = new SearchEngine(indexName);
+                returnText = searchEngine.Search(processedText);
+            }
+            else {
+                returnText = unclearUserInputResponse;
+            }
+            await turnContext.SendActivityAsync(MessageFactory.Text(returnText, returnText), cancellationToken);                       
         }
 
         protected override async Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
         {
             if (turnContext.Activity.ChannelId != "webchat" && turnContext.Activity.ChannelId != "directline")
             {
-                string welcomeText = "Hello there, welcome to ChatWithMe. How can I help you?";
                 foreach (var member in membersAdded)
                 {
                     if (member.Id != turnContext.Activity.Recipient.Id)
@@ -45,5 +56,7 @@ namespace ChatWithMe.Bots
                 }
             }
         }
+
+
     }
 }
