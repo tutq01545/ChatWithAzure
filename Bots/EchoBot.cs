@@ -14,7 +14,7 @@ namespace ChatWithMe.Bots
 {
     public class EchoBot : ActivityHandler
     {
-        private readonly string welcomeText = "Hello there, welcome to KPMG ChatBot about Covid-19 in Germany. How can I help you?";
+        private readonly string welcomeText = "Hello there, welcome to KPMG ChatBot about Covid-19 in Germany. How may I help you?";
         private readonly string unclearUserInputResponse = "Your input is unclear for us. Please check it again!";
         private readonly string indexName = "gms_covid19_globaltracker";
 
