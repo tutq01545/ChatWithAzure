@@ -6,7 +6,7 @@ namespace ChatWithMe
     
     public class MyElasticClient : ElasticClient
     { 
-        static private Uri uri = new Uri("http://52.142.222.175:9200/");
+        static private Uri uri = new Uri("http://40.118.23.38:9200/");
         static private string country = "Germany";
         public string indexName {get;}   
         public MyElasticClient(string indexName) : base(new ConnectionSettings(uri).DefaultIndex(indexName))
